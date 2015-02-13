@@ -190,6 +190,7 @@ const int Stixel::kBackwardWidthFieldNumber;
 Stixel::Stixel()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:doppia_protobuf.Stixel)
 }
 
 void Stixel::InitAsDefaultInstance() {
@@ -199,6 +200,7 @@ Stixel::Stixel(const Stixel& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:doppia_protobuf.Stixel)
 }
 
 void Stixel::SharedCtor() {
@@ -216,6 +218,7 @@ void Stixel::SharedCtor() {
 }
 
 Stixel::~Stixel() {
+  // @@protoc_insertion_point(destructor:doppia_protobuf.Stixel)
   SharedDtor();
 }
 
@@ -246,39 +249,47 @@ Stixel* Stixel::New() const {
 }
 
 void Stixel::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    width_ = 0u;
-    x_ = 0u;
-    bottom_y_ = 0u;
-    top_y_ = 0u;
-    disparity_ = 0u;
-    type_ = 0;
-    backward_delta_x_ = 0;
-    valid_delta_x_ = false;
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<Stixel*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  if (_has_bits_[0 / 32] & 255) {
+    ZR_(width_, valid_delta_x_);
   }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    backward_width_ = 1;
-  }
+  backward_width_ = 1;
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool Stixel::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:doppia_protobuf.Stixel)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required uint32 width = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &width_)));
           set_has_width();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(16)) goto parse_x;
         break;
@@ -286,15 +297,14 @@ bool Stixel::MergePartialFromCodedStream(
 
       // required uint32 x = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 16) {
          parse_x:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &x_)));
           set_has_x();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(24)) goto parse_bottom_y;
         break;
@@ -302,15 +312,14 @@ bool Stixel::MergePartialFromCodedStream(
 
       // required uint32 bottom_y = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 24) {
          parse_bottom_y:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &bottom_y_)));
           set_has_bottom_y();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(32)) goto parse_top_y;
         break;
@@ -318,15 +327,14 @@ bool Stixel::MergePartialFromCodedStream(
 
       // required uint32 top_y = 4;
       case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 32) {
          parse_top_y:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &top_y_)));
           set_has_top_y();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(40)) goto parse_disparity;
         break;
@@ -334,15 +342,14 @@ bool Stixel::MergePartialFromCodedStream(
 
       // required uint32 disparity = 5;
       case 5: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 40) {
          parse_disparity:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &disparity_)));
           set_has_disparity();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(48)) goto parse_type;
         break;
@@ -350,8 +357,7 @@ bool Stixel::MergePartialFromCodedStream(
 
       // required .doppia_protobuf.Stixel.Type type = 6;
       case 6: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 48) {
          parse_type:
           int value;
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
@@ -363,7 +369,7 @@ bool Stixel::MergePartialFromCodedStream(
             mutable_unknown_fields()->AddVarint(6, value);
           }
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(56)) goto parse_backward_delta_x;
         break;
@@ -371,15 +377,14 @@ bool Stixel::MergePartialFromCodedStream(
 
       // optional int32 backward_delta_x = 7 [default = 0];
       case 7: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 56) {
          parse_backward_delta_x:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &backward_delta_x_)));
           set_has_backward_delta_x();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(64)) goto parse_valid_delta_x;
         break;
@@ -387,15 +392,14 @@ bool Stixel::MergePartialFromCodedStream(
 
       // optional bool valid_delta_x = 8 [default = false];
       case 8: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 64) {
          parse_valid_delta_x:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
                  input, &valid_delta_x_)));
           set_has_valid_delta_x();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(72)) goto parse_backward_width;
         break;
@@ -403,25 +407,25 @@ bool Stixel::MergePartialFromCodedStream(
 
       // optional int32 backward_width = 9 [default = 1];
       case 9: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 72) {
          parse_backward_width:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &backward_width_)));
           set_has_backward_width();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -429,12 +433,18 @@ bool Stixel::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:doppia_protobuf.Stixel)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:doppia_protobuf.Stixel)
+  return false;
 #undef DO_
 }
 
 void Stixel::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:doppia_protobuf.Stixel)
   // required uint32 width = 1;
   if (has_width()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->width(), output);
@@ -485,10 +495,12 @@ void Stixel::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:doppia_protobuf.Stixel)
 }
 
 ::google::protobuf::uint8* Stixel::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:doppia_protobuf.Stixel)
   // required uint32 width = 1;
   if (has_width()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->width(), target);
@@ -539,6 +551,7 @@ void Stixel::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:doppia_protobuf.Stixel)
   return target;
 }
 
@@ -724,6 +737,7 @@ const int Stixels::kGroundPlaneFieldNumber;
 Stixels::Stixels()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:doppia_protobuf.Stixels)
 }
 
 void Stixels::InitAsDefaultInstance() {
@@ -735,22 +749,25 @@ Stixels::Stixels(const Stixels& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:doppia_protobuf.Stixels)
 }
 
 void Stixels::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  image_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  image_name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ground_top_and_bottom_ = NULL;
   ground_plane_ = NULL;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 Stixels::~Stixels() {
+  // @@protoc_insertion_point(destructor:doppia_protobuf.Stixels)
   SharedDtor();
 }
 
 void Stixels::SharedDtor() {
-  if (image_name_ != &::google::protobuf::internal::kEmptyString) {
+  if (image_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete image_name_;
   }
   if (this != default_instance_) {
@@ -781,9 +798,9 @@ Stixels* Stixels::New() const {
 }
 
 void Stixels::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & 13) {
     if (has_image_name()) {
-      if (image_name_ != &::google::protobuf::internal::kEmptyString) {
+      if (image_name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         image_name_->clear();
       }
     }
@@ -801,21 +818,25 @@ void Stixels::Clear() {
 
 bool Stixels::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:doppia_protobuf.Stixels)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // optional string image_name = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_image_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->image_name().data(), this->image_name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "image_name");
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_stixels;
         break;
@@ -823,13 +844,12 @@ bool Stixels::MergePartialFromCodedStream(
 
       // repeated .doppia_protobuf.Stixel stixels = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 18) {
          parse_stixels:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_stixels()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_stixels;
         if (input->ExpectTag(26)) goto parse_ground_top_and_bottom;
@@ -838,13 +858,12 @@ bool Stixels::MergePartialFromCodedStream(
 
       // optional .doppia_protobuf.GroundTopAndBottom ground_top_and_bottom = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 26) {
          parse_ground_top_and_bottom:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_ground_top_and_bottom()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(34)) goto parse_ground_plane;
         break;
@@ -852,23 +871,23 @@ bool Stixels::MergePartialFromCodedStream(
 
       // optional .doppia_protobuf.Plane3d ground_plane = 4;
       case 4: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 34) {
          parse_ground_plane:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                input, mutable_ground_plane()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -876,18 +895,25 @@ bool Stixels::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:doppia_protobuf.Stixels)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:doppia_protobuf.Stixels)
+  return false;
 #undef DO_
 }
 
 void Stixels::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:doppia_protobuf.Stixels)
   // optional string image_name = 1;
   if (has_image_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->image_name().data(), this->image_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "image_name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->image_name(), output);
   }
 
@@ -913,15 +939,18 @@ void Stixels::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:doppia_protobuf.Stixels)
 }
 
 ::google::protobuf::uint8* Stixels::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:doppia_protobuf.Stixels)
   // optional string image_name = 1;
   if (has_image_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->image_name().data(), this->image_name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "image_name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->image_name(), target);
@@ -952,6 +981,7 @@ void Stixels::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:doppia_protobuf.Stixels)
   return target;
 }
 
@@ -1043,9 +1073,7 @@ void Stixels::CopyFrom(const Stixels& from) {
 
 bool Stixels::IsInitialized() const {
 
-  for (int i = 0; i < stixels_size(); i++) {
-    if (!this->stixels(i).IsInitialized()) return false;
-  }
+  if (!::google::protobuf::internal::AllAreInitialized(this->stixels())) return false;
   if (has_ground_top_and_bottom()) {
     if (!this->ground_top_and_bottom().IsInitialized()) return false;
   }

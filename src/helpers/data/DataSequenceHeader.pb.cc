@@ -132,6 +132,7 @@ const int DataSequenceAttribute::kValueFieldNumber;
 DataSequenceAttribute::DataSequenceAttribute()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:doppia_protobuf.DataSequenceAttribute)
 }
 
 void DataSequenceAttribute::InitAsDefaultInstance() {
@@ -141,24 +142,27 @@ DataSequenceAttribute::DataSequenceAttribute(const DataSequenceAttribute& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:doppia_protobuf.DataSequenceAttribute)
 }
 
 void DataSequenceAttribute::SharedCtor() {
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  value_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  name_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  value_ = const_cast< ::std::string*>(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 DataSequenceAttribute::~DataSequenceAttribute() {
+  // @@protoc_insertion_point(destructor:doppia_protobuf.DataSequenceAttribute)
   SharedDtor();
 }
 
 void DataSequenceAttribute::SharedDtor() {
-  if (name_ != &::google::protobuf::internal::kEmptyString) {
+  if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete name_;
   }
-  if (value_ != &::google::protobuf::internal::kEmptyString) {
+  if (value_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
     delete value_;
   }
   if (this != default_instance_) {
@@ -187,14 +191,14 @@ DataSequenceAttribute* DataSequenceAttribute::New() const {
 }
 
 void DataSequenceAttribute::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (_has_bits_[0 / 32] & 3) {
     if (has_name()) {
-      if (name_ != &::google::protobuf::internal::kEmptyString) {
+      if (name_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         name_->clear();
       }
     }
     if (has_value()) {
-      if (value_ != &::google::protobuf::internal::kEmptyString) {
+      if (value_ != &::google::protobuf::internal::GetEmptyStringAlreadyInited()) {
         value_->clear();
       }
     }
@@ -205,21 +209,25 @@ void DataSequenceAttribute::Clear() {
 
 bool DataSequenceAttribute::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:doppia_protobuf.DataSequenceAttribute)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required string name = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 10) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_name()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->name().data(), this->name().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "name");
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_value;
         break;
@@ -227,26 +235,27 @@ bool DataSequenceAttribute::MergePartialFromCodedStream(
 
       // required string value = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 18) {
          parse_value:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_value()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
             this->value().data(), this->value().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
+            ::google::protobuf::internal::WireFormat::PARSE,
+            "value");
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -254,27 +263,35 @@ bool DataSequenceAttribute::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:doppia_protobuf.DataSequenceAttribute)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:doppia_protobuf.DataSequenceAttribute)
+  return false;
 #undef DO_
 }
 
 void DataSequenceAttribute::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:doppia_protobuf.DataSequenceAttribute)
   // required string name = 1;
   if (has_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       1, this->name(), output);
   }
 
   // required string value = 2;
   if (has_value()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->value().data(), this->value().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "value");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->value(), output);
   }
 
@@ -282,15 +299,18 @@ void DataSequenceAttribute::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:doppia_protobuf.DataSequenceAttribute)
 }
 
 ::google::protobuf::uint8* DataSequenceAttribute::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:doppia_protobuf.DataSequenceAttribute)
   // required string name = 1;
   if (has_name()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->name().data(), this->name().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "name");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         1, this->name(), target);
@@ -298,9 +318,10 @@ void DataSequenceAttribute::SerializeWithCachedSizes(
 
   // required string value = 2;
   if (has_value()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
       this->value().data(), this->value().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      "value");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->value(), target);
@@ -310,6 +331,7 @@ void DataSequenceAttribute::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:doppia_protobuf.DataSequenceAttribute)
   return target;
 }
 
@@ -414,6 +436,7 @@ const int DataSequenceHeader::kAttributesFieldNumber;
 DataSequenceHeader::DataSequenceHeader()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:doppia_protobuf.DataSequenceHeader)
 }
 
 void DataSequenceHeader::InitAsDefaultInstance() {
@@ -423,6 +446,7 @@ DataSequenceHeader::DataSequenceHeader(const DataSequenceHeader& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:doppia_protobuf.DataSequenceHeader)
 }
 
 void DataSequenceHeader::SharedCtor() {
@@ -431,6 +455,7 @@ void DataSequenceHeader::SharedCtor() {
 }
 
 DataSequenceHeader::~DataSequenceHeader() {
+  // @@protoc_insertion_point(destructor:doppia_protobuf.DataSequenceHeader)
   SharedDtor();
 }
 
@@ -468,30 +493,34 @@ void DataSequenceHeader::Clear() {
 
 bool DataSequenceHeader::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:doppia_protobuf.DataSequenceHeader)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated .doppia_protobuf.DataSequenceAttribute attributes = 3;
       case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 26) {
          parse_attributes:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_attributes()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(26)) goto parse_attributes;
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -499,12 +528,18 @@ bool DataSequenceHeader::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:doppia_protobuf.DataSequenceHeader)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:doppia_protobuf.DataSequenceHeader)
+  return false;
 #undef DO_
 }
 
 void DataSequenceHeader::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:doppia_protobuf.DataSequenceHeader)
   // repeated .doppia_protobuf.DataSequenceAttribute attributes = 3;
   for (int i = 0; i < this->attributes_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -515,10 +550,12 @@ void DataSequenceHeader::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:doppia_protobuf.DataSequenceHeader)
 }
 
 ::google::protobuf::uint8* DataSequenceHeader::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:doppia_protobuf.DataSequenceHeader)
   // repeated .doppia_protobuf.DataSequenceAttribute attributes = 3;
   for (int i = 0; i < this->attributes_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -530,6 +567,7 @@ void DataSequenceHeader::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:doppia_protobuf.DataSequenceHeader)
   return target;
 }
 
@@ -587,9 +625,7 @@ void DataSequenceHeader::CopyFrom(const DataSequenceHeader& from) {
 
 bool DataSequenceHeader::IsInitialized() const {
 
-  for (int i = 0; i < attributes_size(); i++) {
-    if (!this->attributes(i).IsInitialized()) return false;
-  }
+  if (!::google::protobuf::internal::AllAreInitialized(this->attributes())) return false;
   return true;
 }
 

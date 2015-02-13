@@ -132,6 +132,7 @@ const int TopAndBottom::kBottomYFieldNumber;
 TopAndBottom::TopAndBottom()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:doppia_protobuf.TopAndBottom)
 }
 
 void TopAndBottom::InitAsDefaultInstance() {
@@ -141,6 +142,7 @@ TopAndBottom::TopAndBottom(const TopAndBottom& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:doppia_protobuf.TopAndBottom)
 }
 
 void TopAndBottom::SharedCtor() {
@@ -151,6 +153,7 @@ void TopAndBottom::SharedCtor() {
 }
 
 TopAndBottom::~TopAndBottom() {
+  // @@protoc_insertion_point(destructor:doppia_protobuf.TopAndBottom)
   SharedDtor();
 }
 
@@ -181,30 +184,44 @@ TopAndBottom* TopAndBottom::New() const {
 }
 
 void TopAndBottom::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    top_y_ = 0u;
-    bottom_y_ = 0u;
-  }
+#define OFFSET_OF_FIELD_(f) (reinterpret_cast<char*>(      \
+  &reinterpret_cast<TopAndBottom*>(16)->f) - \
+   reinterpret_cast<char*>(16))
+
+#define ZR_(first, last) do {                              \
+    size_t f = OFFSET_OF_FIELD_(first);                    \
+    size_t n = OFFSET_OF_FIELD_(last) - f + sizeof(last);  \
+    ::memset(&first, 0, n);                                \
+  } while (0)
+
+  ZR_(top_y_, bottom_y_);
+
+#undef OFFSET_OF_FIELD_
+#undef ZR_
+
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
 
 bool TopAndBottom::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:doppia_protobuf.TopAndBottom)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required uint32 top_y = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &top_y_)));
           set_has_top_y();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(16)) goto parse_bottom_y;
         break;
@@ -212,25 +229,25 @@ bool TopAndBottom::MergePartialFromCodedStream(
 
       // required uint32 bottom_y = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 16) {
          parse_bottom_y:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint32, ::google::protobuf::internal::WireFormatLite::TYPE_UINT32>(
                  input, &bottom_y_)));
           set_has_bottom_y();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -238,12 +255,18 @@ bool TopAndBottom::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:doppia_protobuf.TopAndBottom)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:doppia_protobuf.TopAndBottom)
+  return false;
 #undef DO_
 }
 
 void TopAndBottom::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:doppia_protobuf.TopAndBottom)
   // required uint32 top_y = 1;
   if (has_top_y()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->top_y(), output);
@@ -258,10 +281,12 @@ void TopAndBottom::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:doppia_protobuf.TopAndBottom)
 }
 
 ::google::protobuf::uint8* TopAndBottom::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:doppia_protobuf.TopAndBottom)
   // required uint32 top_y = 1;
   if (has_top_y()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->top_y(), target);
@@ -276,6 +301,7 @@ void TopAndBottom::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:doppia_protobuf.TopAndBottom)
   return target;
 }
 
@@ -380,6 +406,7 @@ const int GroundTopAndBottom::kTopAndBottomFieldNumber;
 GroundTopAndBottom::GroundTopAndBottom()
   : ::google::protobuf::Message() {
   SharedCtor();
+  // @@protoc_insertion_point(constructor:doppia_protobuf.GroundTopAndBottom)
 }
 
 void GroundTopAndBottom::InitAsDefaultInstance() {
@@ -389,6 +416,7 @@ GroundTopAndBottom::GroundTopAndBottom(const GroundTopAndBottom& from)
   : ::google::protobuf::Message() {
   SharedCtor();
   MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:doppia_protobuf.GroundTopAndBottom)
 }
 
 void GroundTopAndBottom::SharedCtor() {
@@ -397,6 +425,7 @@ void GroundTopAndBottom::SharedCtor() {
 }
 
 GroundTopAndBottom::~GroundTopAndBottom() {
+  // @@protoc_insertion_point(destructor:doppia_protobuf.GroundTopAndBottom)
   SharedDtor();
 }
 
@@ -434,30 +463,34 @@ void GroundTopAndBottom::Clear() {
 
 bool GroundTopAndBottom::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:doppia_protobuf.GroundTopAndBottom)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // repeated .doppia_protobuf.TopAndBottom top_and_bottom = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 10) {
          parse_top_and_bottom:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
                 input, add_top_and_bottom()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(10)) goto parse_top_and_bottom;
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -465,12 +498,18 @@ bool GroundTopAndBottom::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:doppia_protobuf.GroundTopAndBottom)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:doppia_protobuf.GroundTopAndBottom)
+  return false;
 #undef DO_
 }
 
 void GroundTopAndBottom::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:doppia_protobuf.GroundTopAndBottom)
   // repeated .doppia_protobuf.TopAndBottom top_and_bottom = 1;
   for (int i = 0; i < this->top_and_bottom_size(); i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
@@ -481,10 +520,12 @@ void GroundTopAndBottom::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:doppia_protobuf.GroundTopAndBottom)
 }
 
 ::google::protobuf::uint8* GroundTopAndBottom::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:doppia_protobuf.GroundTopAndBottom)
   // repeated .doppia_protobuf.TopAndBottom top_and_bottom = 1;
   for (int i = 0; i < this->top_and_bottom_size(); i++) {
     target = ::google::protobuf::internal::WireFormatLite::
@@ -496,6 +537,7 @@ void GroundTopAndBottom::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:doppia_protobuf.GroundTopAndBottom)
   return target;
 }
 
@@ -553,9 +595,7 @@ void GroundTopAndBottom::CopyFrom(const GroundTopAndBottom& from) {
 
 bool GroundTopAndBottom::IsInitialized() const {
 
-  for (int i = 0; i < top_and_bottom_size(); i++) {
-    if (!this->top_and_bottom(i).IsInitialized()) return false;
-  }
+  if (!::google::protobuf::internal::AllAreInitialized(this->top_and_bottom())) return false;
   return true;
 }
 
