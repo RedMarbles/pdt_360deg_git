@@ -59,6 +59,8 @@ set(local_LIBRARY_DIRS
   "/usr/lib64"
   "/usr/lib64/atlas"
   "/usr/lib/sse2/atlas"
+  "/usr/lib"     # Local library
+  "/usr/lib32"   # Local 32-bit library
 )
 set(local_INCLUDE_DIRS
   "/users/visics/rbenenso/no_backup/usr/local/include"

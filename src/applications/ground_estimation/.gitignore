@@ -1,0 +1,4 @@
+#Ignore generated files
+
+CMakeFiles/
+ground_estimation

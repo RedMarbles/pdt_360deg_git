@@ -55,7 +55,7 @@ void MetricCamera::compute_helper_matrices()
     Rt.topLeftCorner<3, 3>() = get_calibration().get_pose().rotation;
     Rt.col(3) = get_calibration().get_pose().translation;
 
-    P = K*Rt; // set P the projection matrix
+    P.topLeftCorner<3, 4>() = K*Rt; // set P the projection matrix
     return;
 }
 

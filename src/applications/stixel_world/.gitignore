@@ -1,0 +1,4 @@
+#Ignore generated files
+
+CMakeFiles/
+stixel_world

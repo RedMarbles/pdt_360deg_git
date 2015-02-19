@@ -1,0 +1,4 @@
+#Ignore generated files
+
+CMakeFiles/
+objects_detection
