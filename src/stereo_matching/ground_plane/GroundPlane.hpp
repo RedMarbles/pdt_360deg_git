@@ -32,6 +32,9 @@ public:
     /// we assume no roll
     float get_pitch() const;
 
+    //Assignment operator
+    GroundPlane& operator=(GroundPlane _src);
+
 };
 
 } // end of namespace doppia

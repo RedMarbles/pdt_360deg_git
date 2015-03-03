@@ -28,7 +28,7 @@ project (StixelWorld)
 # ----------------------------------------------------------------------
 # Site specific configurations
 include(${doppia_root}/common_settings.cmake)
-set(USE_GPU OFF CACHE BOOL "Should the GPU be used ?" FORCE)
+set(USE_GPU OFF CACHE BOOL "Should the GPU be used ?" )
 
 # ----------------------------------------------------------------------
 # Setup required libraries
@@ -65,6 +65,7 @@ set(local_INCLUDE_DIRS
   "/usr/include/eigen2/"
    "/usr/local/include/eigen2"
   "${doppia_root}/libs/cudatemplates/include"
+  "/usr/local/cuda/include"
 )
 
 link_directories(

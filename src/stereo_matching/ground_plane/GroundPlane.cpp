@@ -57,4 +57,10 @@ float GroundPlane::get_pitch() const
     return std::asin(this->normal()(i_z));
 }
 
+GroundPlane& GroundPlane::operator=(GroundPlane _src)
+{
+    this->m_coeffs << _src.m_coeffs;
+    return *this;
+}
+
 } // end of namespace doppia
