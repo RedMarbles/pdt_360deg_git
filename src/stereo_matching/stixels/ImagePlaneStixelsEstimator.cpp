@@ -763,7 +763,7 @@ void compute_object_cost_with_any_stixel_support_width(
 
             // a pixel (x,y) on the left image should be matched on the right image on the range ([0,x],y)
             const int right_u = left_u - d;
-            if(right_u < 0)
+            if((right_u < 0) or (right_u >= num_columns))
             {
                 // disparity is too large for the current column
                 // cost left to zero
