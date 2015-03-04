@@ -259,7 +259,7 @@ void FastStixelsEstimator::compute_object_cost(u_disparity_cost_t &object_cost) 
         for(size_t d = 0; d < num_disparities; d += 1)
         {
             const int right_u = u - (d + disparity_offset);
-            if( right_u < 0 )
+            if( (right_u < 0) or (right_u >= num_columns) )
             {
                 // disparity is too large for the current column
                 // cost left to zero
