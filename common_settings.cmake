@@ -345,6 +345,33 @@ elseif(${HOSTNAME} STREQUAL  "Artework-Labs")
   message(STATUS "Using Artework-Labs compilation options")
   # start with an empty section, and see what fails as you go through the readme.text instructions
 
+  #Disable the hundreds of warnings caused by unused typedefs in the code
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs ")
+
+  #The _simd instructions cannot compile unless SSE, SSE2 and the other SSEX packages are allowed
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=native -Wno-unknown-pragmas ")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-sign-compare  -Wno-write-strings")
+
+  #Unsure about this. Enable this if you want to allow the program to go into multi-threaded mode, which might make debugging more difficult
+  #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fopenmp")
+
+  # since gcc 4.6 the option -Ofast provides faster than -O3
+  #set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG -Dint_p_NULL='\(\(int*\)0\)'")
+  #set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
+  #set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -DNDEBUG")
+
+  #option(USE_GPU "Should the GPU be used ?" ON)
+  #option(USE_GPU "Should the GPU be used ?" OFF) # set to false for testing purposes only
+  ##set(CUDA_BUILD_EMULATION OFF CACHE BOOL "enable emulation mode")
+  ##set(CUDA_BUILD_CUBIN OFF)
+  set(local_CUDA_CUT_INCLUDE_DIRS "/usr/local/cuda-5.5/include")
+  set(local_CUDA_CUT_LIBRARY_DIRS "/usr/local/cuda-5.5/lib")
+  set(local_CUDA_LIB_DIR "/usr/lib/nvidia")
+  ##set(local_CUDA_LIB_DIR "/usr/lib/nvidia-331 " ${local_CUDA_LIB_DIR})
+  set(local_CUDA_LIB "/usr/lib/nvidia/libcuda.so")
+  #set(cuda_LIBS "cuda")
+  #set(cutil_LIB "cutil")
+
 else ()
   message(FATAL_ERROR, "Unknown machine, please add your configuration inside doppia/common_settings.cmake")
   # see the elseif section above

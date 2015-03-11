@@ -2,9 +2,9 @@
 
 #include "helpers/gpu/cuda_safe_call.hpp"
 
-#include "cudatemplates/array.hpp"
-#include "cudatemplates/symbol.hpp"
-#include "cudatemplates/copy.hpp"
+#include <cudatemplates/array.hpp>
+#include <cudatemplates/symbol.hpp>
+#include <cudatemplates/copy.hpp>
 
 #include <cudatemplates/hostmemoryheap.hpp>
 

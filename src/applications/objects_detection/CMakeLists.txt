@@ -17,7 +17,7 @@ set(doppia_root "${CMAKE_CURRENT_LIST_DIR}/../../..")
 
 set(CMAKE_MODULE_PATH $ENV{CMAKE_MODULE_PATH})
 set(CMAKE_MODULE_PATH "./" ${doppia_root} ${CMAKE_MODULE_PATH})
-set(CMAKE_MODULE_PATH "/home/rodrigob/work/code/doppia_references/cuda/FindCUDA/CMake/cuda" ${CMAKE_MODULE_PATH})
+#set(CMAKE_MODULE_PATH "/home/rodrigob/work/code/doppia_references/cuda/FindCUDA/CMake/cuda" ${CMAKE_MODULE_PATH})
 #set(CMAKE_MODULE_PATH "/users/visics/mmathias/no_backup/code/references/cuda/FindCUDA/CMake/cuda" ${CMAKE_MODULE_PATH})
 
 # ----------------------------------------------------------------------
@@ -29,6 +29,7 @@ project (ObjectsDetection)
 # ----------------------------------------------------------------------
 # Site specific configurations
 include(${doppia_root}/common_settings.cmake)
+set(USE_GPU OFF CACHE BOOL "Should the GPU be used ?" )
 
 # ----------------------------------------------------------------------
 # Setup required libraries
@@ -54,7 +55,9 @@ find_package(Boost REQUIRED
 # Setup CUDA
 if(USE_GPU)
   find_package(CUDA 4.0 REQUIRED)
-  include_directories(${CUDA_INCLUDE_DIRS} ${CUDA_CUT_INCLUDE_DIR})
+  include_directories(${CUDA_INCLUDE_DIRS} ${CUDA_CUT_INCLUDE_DIR}
+    ${local_CUDA_CUT_INCLUDE_DIRS})
+  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch compute_20 -code sm_20)
 endif(USE_GPU)
 
 # ----------------------------------------------------------------------
@@ -68,6 +71,7 @@ set(local_LIBRARY_DIRS
   "/usr/lib/sse2/atlas"
   "/usr/lib/llvm-2.8/lib"
   ${local_CUDA_LIB_DIR}
+  ${local_CUDA_CUT_LIBRARY_DIRS}
 )
 set(local_INCLUDE_DIRS
   "/users/visics/mmathias/no_backup/usr/local/include"
@@ -75,6 +79,7 @@ set(local_INCLUDE_DIRS
    "/usr/local/include/eigen2"
    "/usr/local/cuda-5.5/include"
    ${CUDA_INCLUDE_DIRS}
+   ${local_CUDA_CUT_INCLUDE_DIRS}
 )
 
 link_directories(
@@ -97,7 +102,9 @@ include_directories(
 )
 
 if(USE_GPU)
-cuda_include_directories("${doppia_root}/libs/")
+  cuda_include_directories("${doppia_root}/libs/"
+    ${CUDA_INCLUDE_DIRS}
+    ${local_CUDA_CUT_INCLUDE_DIRS})
 endif(USE_GPU)
 
 # ----------------------------------------------------------------------
@@ -224,7 +231,7 @@ list(APPEND opencv_LIBRARIES opencv_gpu)
 # ----------------------------------------------------------------------
 # Compile CUDA stuff
 cuda_include_directories(${local_CUDA_CUT_INCLUDE_DIRS})
-cuda_include_directories(${CUDA_INCLUDE_DIRS} ${CUDA_CUT_INCLUDE_DIR} ${local_CUDA_CUT_INCLUDE_DIR})
+cuda_include_directories(${CUDA_INCLUDE_DIRS} ${CUDA_CUT_INCLUDE_DIR} ${local_CUDA_CUT_INCLUDE_DIRS})
 link_directories(${local_CUDA_CUT_LIBRARY_DIRS})
 
 cuda_add_library(cuda_stuff_library ${SrcCuda})
