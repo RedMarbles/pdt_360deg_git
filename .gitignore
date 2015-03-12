@@ -57,6 +57,7 @@ gmon.out
 Makefile
 CMakeCache.txt
 CMakeFiles/*
+CMakeFiles
 cmake_install.cmake
 
 Debug/*
@@ -130,3 +131,9 @@ cachegrind.out.*
 *.condor.out
 *.err
 *.log
+
+src/applications/boosted_learning/boosted_learning
+src/applications/objects_detection_lib/test_monocular_objects_detection_lib
+src/applications/objects_detection_lib/test_monocular_objects_detection_with_ui_lib
+src/applications/objects_detection_lib/test_objects_detection_lib
+src/applications/objects_detection_lib/test_objects_detection_with_ui_lib
