@@ -47,7 +47,7 @@
 #include "drawing/gil/draw_matrix.hpp"
 #include "drawing/gil/hsv_to_rgb.hpp"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include <stdexcept>
 
@@ -190,7 +190,7 @@ bool StixelWorldGui::process_inputs()
 {
     const bool end_of_game = BaseSdlGui::process_inputs();
 
-    Uint8 *keys = SDL_GetKeyState(NULL);
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
     if( stixel_motion_estimator_p and keys[SDLK_r] )
     {

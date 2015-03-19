@@ -7,7 +7,7 @@
 #include "helpers/Log.hpp"
 #include "helpers/get_option_value.hpp"
 
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
@@ -94,9 +94,18 @@ void BaseSdlGui::init_gui(const std::string &title, const int input_width, const
 
     // create the application window
     SDL_Init(SDL_INIT_VIDEO);
+
+    //SDL v2 code:
+    window_p = SDL_CreateWindow( (title + base_application.get_application_title()).c_str() ,
+                                SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_UNDEFINED,
+                                input_width*2, input_height,
+                                SDL_WINDOW_SHOWN);
+    renderer_p = SDL_CreateRenderer(window_p, -1, SDL_RENDERER_ACCELERATED);
+
     resize_gui(input_width, input_height);
 
-    SDL_WM_SetCaption(title.c_str(), base_application.get_application_title().c_str());
+    //SDL_WM_SetCaption(title.c_str(), base_application.get_application_title().c_str()); // SDL v1.2 code
 
     print_inputs_instructions();
 
@@ -109,13 +118,14 @@ void BaseSdlGui::init_gui(const std::string &title, const int input_width, const
 void BaseSdlGui::resize_gui(const int input_width, const int input_height)
 {
 
-    screen_p = SDL_SetVideoMode(input_width*2, input_height, 24, SDL_HWSURFACE);
-    if(screen_p == NULL)
+    //screen_p = SDL_SetVideoMode(input_width*2, input_height, 24, SDL_HWSURFACE); // SDL v1.2 code
+
+    if(renderer_p == NULL)
     {
-        fprintf(stderr, "Couldn't set %ix%i video mode: %s\n",
+        fprintf(stderr, "Couldn't create %ix%i window: %s\n",
                 input_width*2, input_height,
                 SDL_GetError());
-        throw std::runtime_error("Could not set SDL_SetVideoMode");
+        throw std::runtime_error("Could not initialize SDL_CreateWindow or SDL_CreateRenderer");
     }
 
     screen_image.recreate(input_width*2, input_height);
@@ -146,7 +156,8 @@ bool BaseSdlGui::process_inputs()
     {
         switch(event.type)
         {
-        case SDL_VIDEORESIZE:
+        //case SDL_VIDEORESIZE: // SDL v1.2 code
+        case SDL_WINDOWEVENT_RESIZED: //SDL v2 code
             // we do not want the user the play around with the window size
             throw std::runtime_error("BaseSdlGui::process_inputs does not support window resizing");
             break;
@@ -157,7 +168,8 @@ bool BaseSdlGui::process_inputs()
         }
     }
 
-    Uint8 *keys = SDL_GetKeyState(NULL);
+    //Uint8 *keys = SDL_GetKeyState(NULL); // SDL v1.2 code
+    const Uint8 *keys = SDL_GetKeyboardState(NULL); // SDL v2 code
 
     if(keys[SDLK_ESCAPE] or keys[SDLK_q])
     {
@@ -221,7 +233,7 @@ bool BaseSdlGui::process_inputs()
             break;
         }
 
-        Uint8 *keys = SDL_GetKeyState(NULL);
+        const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
         if(event.type == SDL_QUIT or
                 keys[SDLK_p] or keys[SDLK_SPACE] or
@@ -326,10 +338,10 @@ void BaseSdlGui::blit_to_screen()
     // on the endianness (byte order) of the machine
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     //const Uint32  r_mask = 0xff000000, g_mask = 0x00ff0000, b_mask = 0x0000ff00, a_mask = 0x000000ff;
-    const Uint32 r_mask = 0x00ff0000, g_mask = 0x0000ff00, b_mask = 0x000000ff, a_mask = 0x00000000;
+    const Uint32 r_mask = 0x00ff0000, g_mask = 0x0000ff00, b_mask = 0x000000ff, a_mask = 0xff000000;
 #else
     //const Uint32 r_mask = 0x000000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0xff000000;
-    const Uint32 r_mask = 0x0000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0x00000000;
+    const Uint32 r_mask = 0x0000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0xff000000;
 #endif
 
     SDL_Surface *surface_p =
@@ -337,25 +349,30 @@ void BaseSdlGui::blit_to_screen()
                                      view.width(), view.height(),
                                      depth, pitch,
                                      r_mask, g_mask, b_mask, a_mask);
-    if (SDL_MUSTLOCK(screen_p))
-    {
-        if (SDL_LockSurface(screen_p) < 0)
-        {
-            log_error() << "Couldn't lock SDL screen: " << SDL_GetError() << endl;
-            throw std::runtime_error("Failed to lock SDL screen");
-        }
-    }
+    //if (SDL_MUSTLOCK(screen_p))
+    //{
+    //    if (SDL_LockSurface(screen_p) < 0)
+    //    {
+    //        log_error() << "Couldn't lock SDL screen: " << SDL_GetError() << endl;
+    //        throw std::runtime_error("Failed to lock SDL screen");
+    //    }
+    //}
 
     // copy the full image to the top left corner of the screen
-    SDL_BlitSurface(surface_p, NULL, screen_p, NULL);
+    //SDL_BlitSurface(surface_p, NULL, screen_p, NULL);
     //SDL_FillRect(screen_p, NULL, 1000); // fill with blue
 
-    if (SDL_MUSTLOCK(screen_p))
-    {
-        SDL_UnlockSurface(screen_p);
-    }
+    //if (SDL_MUSTLOCK(screen_p))
+    //{
+    //    SDL_UnlockSurface(screen_p);
+    //}
 
-    SDL_Flip(screen_p);
+    //SDL_Flip(screen_p);
+
+    texture_p = SDL_CreateTextureFromSurface(renderer_p, surface_p);
+    SDL_RenderClear(renderer_p);
+    SDL_RenderCopy(renderer_p, texture_p, NULL, NULL);
+    SDL_RenderPresent(renderer_p);
 
     SDL_FreeSurface(surface_p);
 

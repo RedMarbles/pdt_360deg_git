@@ -41,6 +41,8 @@ set(opencv_LIBRARIES
     opencv_legacy opencv_flann
    ) # quick hack for opencv2.4 support
 
+pkg_search_module(SDL2 REQUIRED sdl2)
+
 # ----------------------------------------------------------------------
 # Setup CUDA
 
@@ -83,6 +85,7 @@ include_directories(
   ${opencv_INCLUDE_DIRS}
   ${local_INCLUDE_DIRS}
   "${doppia_root}/libs/cudatemplates/include"
+  ${SDL2_INCLUDE_DIRS}
 )
 
 
@@ -264,7 +267,9 @@ target_link_libraries(test_objects_detection
   boost_thread-mt pthread gomp
   protobuf
   ${opencv_LIBRARIES} opencv_legacy # required when using opencv 2.4
-  SDL X11 Xext #Xrandr
+  #SDL 
+  ${SDL2_LIBRARIES}
+  X11 Xext #Xrandr
   ${libpng_LIBRARIES} jpeg
 )
 

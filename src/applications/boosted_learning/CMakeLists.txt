@@ -59,6 +59,8 @@ find_package(Boost REQUIRED
    COMPONENTS program_options filesystem system serialization thread
 )
 
+pkg_search_module(SDL2 REQUIRED sdl2)
+
 # ----------------------------------------------------------------------
 # Setup link and include directories
 
@@ -99,6 +101,7 @@ include_directories(
   ${local_INCLUDE_DIRS}
   "${doppia_root}/libs/cudatemplates/include"
   ${doppia_root}/libs/liblinear-1.8
+  ${SDL2_INCLUDE_DIRS}
 )
 
 # ----------------------------------------------------------------------
@@ -163,7 +166,9 @@ target_link_libraries(boosted_learning
 
    ${Boost_LIBRARIES}
    protobuf pthread
-   SDL X11 Xext #Xrandr
+   #SDL 
+   ${SDL2_LIBRARIES}
+   X11 Xext #Xrandr
    gomp
    ${libpng_LIBRARIES} jpeg
    ${opencv_LIBRARIES}

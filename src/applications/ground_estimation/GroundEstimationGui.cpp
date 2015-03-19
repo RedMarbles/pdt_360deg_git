@@ -28,7 +28,7 @@
 #include <boost/array.hpp>
 #include <boost/gil/extension/io/png_io.hpp>
 
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 
 #include <opencv2/core/core.hpp>
 #include "boost/gil/extension/opencv/ipl_image_wrapper.hpp"

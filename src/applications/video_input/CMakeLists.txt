@@ -50,6 +50,8 @@ find_package(Boost REQUIRED
    COMPONENTS program_options filesystem system thread
 )
 
+pkg_search_module(SDL2 REQUIRED sdl2)
+
 # ----------------------------------------------------------------------
 # Setup CUDA
 
@@ -88,6 +90,7 @@ include_directories(
   ${opencv_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${local_INCLUDE_DIRS}
+  ${SDL2_INCLUDE_DIRS}
 )
 #cuda_include_directories(./libs )
 
@@ -134,7 +137,8 @@ target_link_libraries(video_input
 
    ${Boost_LIBRARIES}
    protobuf pthread
-   SDL
+   #SDL
+   ${SDL2_LIBRARIES}
    gomp Xext Xrandr X11
    ${libpng_LIBRARIES}  jpeg
    ${opencv_LIBRARIES}

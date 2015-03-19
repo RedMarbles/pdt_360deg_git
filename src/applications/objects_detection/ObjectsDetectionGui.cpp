@@ -58,7 +58,7 @@
 #include "drawing/gil/draw_matrix.hpp"
 #include "drawing/gil/hsv_to_rgb.hpp"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include "cudatemplates/copy.hpp"
 #include "cudatemplates/hostmemoryheap.hpp"
