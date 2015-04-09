@@ -190,6 +190,8 @@ bool StixelWorldGui::process_inputs()
 {
     const bool end_of_game = BaseSdlGui::process_inputs();
 
+    //TODO: Because of the keyboard event stack issue, this section will never run properly. Needs to be fixed later.
+
     const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
     if( stixel_motion_estimator_p and keys[SDLK_r] )

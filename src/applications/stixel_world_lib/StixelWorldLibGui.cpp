@@ -141,6 +141,8 @@ bool StixelWorldLibGui::process_inputs()
 
     SDL_Event event;
 
+    SDL_Keycode keys = 0;
+
     while ( SDL_PollEvent(&event) )
     {
         switch(event.type)
@@ -155,45 +157,46 @@ bool StixelWorldLibGui::process_inputs()
             end_of_game = true;
             break;
         }
-    }
+    //}
 
-    //Uint8 *keys = SDL_GetKeyState(NULL); // SDL v1.2 code
-    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+        //Uint8 *keys = SDL_GetKeyState(NULL); // SDL v1.2 code
+        //const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
-    if(keys[SDLK_ESCAPE] or keys[SDLK_q])
-    {
-        end_of_game = true;
-    }
-
-
-    // check for a change in the view mode --
-    for(views_map_t::const_iterator views_it=views_map.begin();
-        views_it != views_map.end();
-        ++views_it)
-    {
-
-        const boost::uint8_t &view_key = views_it->first;
-
-        if(keys[view_key])
+        if( (keys==SDLK_ESCAPE) or (keys==SDLK_q) )
         {
-            const view_t &new_view = views_it->second;
-            const std::string &new_view_name = new_view.second;
-
-            // boost::function operator== cannot be defined (?!)
-            // http://www.boost.org/doc/libs/1_44_0/doc/html/function/faq.html#id1284482
-            // to work around the issue we use the string description and pray that the strings are unique
-
-            //if(drawing_function != view_drawing_function)
-            if(current_view.second != new_view_name)
-            {
-                printf("Switching to view %i: %s\n",
-                       (view_key - SDLK_0), new_view_name.c_str());
-                current_view = new_view;
-            }
-
+            end_of_game = true;
         }
 
-    } // end of "for each view in views_map"
+
+        // check for a change in the view mode --
+        for(views_map_t::const_iterator views_it=views_map.begin();
+            views_it != views_map.end();
+            ++views_it)
+        {
+
+            const boost::uint8_t &view_key = views_it->first;
+
+            if(keys==view_key)
+            {
+                const view_t &new_view = views_it->second;
+                const std::string &new_view_name = new_view.second;
+
+                // boost::function operator== cannot be defined (?!)
+                // http://www.boost.org/doc/libs/1_44_0/doc/html/function/faq.html#id1284482
+                // to work around the issue we use the string description and pray that the strings are unique
+
+                //if(drawing_function != view_drawing_function)
+                if(current_view.second != new_view_name)
+                {
+                    printf("Switching to view %i: %s\n",
+                           (view_key - SDLK_0), new_view_name.c_str());
+                    current_view = new_view;
+                }
+
+            }
+
+        } // end of "for each view in views_map"
+    } // end of while(SDL_PollEvent(&event))
 
 
     return end_of_game;
