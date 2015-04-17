@@ -42,8 +42,8 @@ public:
 // forward declarations
 class SDL_Surface;
 class SDL_Window;
-class SDL_Renderer;
-class SDL_Texture;
+//class SDL_Renderer;
+//class SDL_Texture;
 
 namespace doppia {
 // forward declarations
@@ -94,10 +94,10 @@ protected:
     boost::shared_ptr<doppia::AbstractStixelWorldEstimator> stixel_world_estimator_p;
 
     /// SDL structures for drawing to window
-    //SDL_Surface *screen_p;
+    SDL_Surface *screen_p;
     SDL_Window *window_p;
-    SDL_Renderer *renderer_p;
-    SDL_Texture *texture_p;
+    //SDL_Renderer *renderer_p;
+    //SDL_Texture *texture_p;
     boost::gil::rgb8_image_t screen_image;
     boost::gil::rgb8_view_t screen_image_view;
     boost::gil::rgb8_view_t screen_left_view, screen_right_view;

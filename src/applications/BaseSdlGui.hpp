@@ -18,8 +18,8 @@
 // forward declaration
 class SDL_Surface;
 class SDL_Window;
-class SDL_Renderer;
-class SDL_Texture;
+//class SDL_Renderer;
+//class SDL_Texture;
 
 namespace doppia {
 
@@ -57,10 +57,10 @@ protected:
     void print_inputs_instructions() const;
 
     /// SDL sructures for drawing to window
-    //SDL_Surface *screen_p;
+    SDL_Surface *screen_p;
     SDL_Window *window_p;
-    SDL_Renderer *renderer_p;
-    SDL_Texture *texture_p;
+    //SDL_Renderer *renderer_p;
+    //SDL_Texture *texture_p;
     boost::gil::rgb8_image_t screen_image;
     boost::gil::rgb8_view_t screen_image_view;
 

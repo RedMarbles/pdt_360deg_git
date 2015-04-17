@@ -68,7 +68,9 @@ StixelWorldLibGui::StixelWorldLibGui(const int input_width, const int input_heig
 
 StixelWorldLibGui::~StixelWorldLibGui()
 {
-    // nothing to do here
+    SDL_DestroyWindow( window_p );
+    SDL_Quit();
+
     return;
 }
 
@@ -94,12 +96,13 @@ void StixelWorldLibGui::init_gui(const std::string &title, const int input_width
     SDL_Init(SDL_INIT_VIDEO);
 
     //SDL v2 code:
-    window_p = SDL_CreateWindow( (title + base_application.get_application_title()).c_str() ,
+    window_p = SDL_CreateWindow( title.c_str() ,
                                 SDL_WINDOWPOS_UNDEFINED,
                                 SDL_WINDOWPOS_UNDEFINED,
                                 input_width*2, input_height,
                                 SDL_WINDOW_SHOWN);
-    renderer_p = SDL_CreateRenderer(window_p, -1, SDL_RENDERER_ACCELERATED);
+    screen_p = SDL_GetWindowSurface( window_p );
+    //renderer_p = SDL_CreateRenderer(window_p, -1, SDL_RENDERER_ACCELERATED);
 
     resize_gui(input_width, input_height);
 
@@ -118,13 +121,17 @@ void StixelWorldLibGui::resize_gui(const int input_width, const int input_height
 
     //screen_p = SDL_SetVideoMode(input_width*2, input_height, 24, SDL_HWSURFACE); //SDL v1.2 code
     //if(screen_p == NULL)
-    if(renderer_p == NULL)
+    if(window_p == NULL)
     {
         fprintf(stderr, "Couldn't create %ix%i window: %s\n",
                 input_width*2, input_height,
                 SDL_GetError());
-        throw std::runtime_error("Could not initialize SDL_CreateWindow or SDL_CreateRenderer");
+        throw std::runtime_error("Could not initialize SDL_CreateWindow");
     }
+
+    //SDL2 code
+    SDL_SetWindowSize(window_p, input_width*2, input_height);
+    screen_p = SDL_GetWindowSurface( window_p );
 
     screen_image.recreate(input_width*2, input_height);
     screen_image_view = boost::gil::view(screen_image);
@@ -155,6 +162,10 @@ bool StixelWorldLibGui::process_inputs()
 
         case SDL_QUIT:
             end_of_game = true;
+            break;
+
+        case SDL_KEYDOWN:
+            keys = event.key.keysym.sym;
             break;
         }
     //}
@@ -278,32 +289,34 @@ void StixelWorldLibGui::blit_to_screen()
                                       view.width(), view.height(),
                                       depth, pitch,
                                       r_mask, g_mask, b_mask, a_mask);
-    //if (SDL_MUSTLOCK(screen_p))
-    //{
-    //    if (SDL_LockSurface(screen_p) < 0)
-    //    {
-    //        std::cerr << "Couldn't lock SDL screen: " << SDL_GetError() << std::endl;
-    //        throw std::runtime_error("Failed to lock SDL screen");
-    //    }
-    //}
+    if (SDL_MUSTLOCK(screen_p))
+    {
+        if (SDL_LockSurface(screen_p) < 0)
+        {
+            std::cerr << "Couldn't lock SDL screen: " << SDL_GetError() << std::endl;
+            throw std::runtime_error("Failed to lock SDL screen");
+        }
+    }
 
     // copy the full image to the top left corner of the screen
-    //SDL_BlitSurface(surface_p, NULL, screen_p, NULL);
+    SDL_BlitSurface(surface_p, NULL, screen_p, NULL);
     //SDL_FillRect(screen_p, NULL, 1000); // fill with blue
 
-    //if (SDL_MUSTLOCK(screen_p))
-    //{
-    //    SDL_UnlockSurface(screen_p);
-    //}
+    if (SDL_MUSTLOCK(screen_p))
+    {
+        SDL_UnlockSurface(screen_p);
+    }
 
     //SDL_Flip(screen_p);
+    SDL_UpdateWindowSurface( window_p );
 
+    //texture_p = SDL_CreateTextureFromSurface(renderer_p, surface_p);
+    //SDL_RenderClear(renderer_p);
+    //SDL_RenderCopy(renderer_p, texture_p, NULL, NULL);
+    //SDL_RenderPresent(renderer_p);
 
     SDL_FreeSurface(surface_p);
-    texture_p = SDL_CreateTextureFromSurface(renderer_p, surface_p);
-    SDL_RenderClear(renderer_p);
-    SDL_RenderCopy(renderer_p, texture_p, NULL, NULL);
-    SDL_RenderPresent(renderer_p);
+    
     return;
 }
 
