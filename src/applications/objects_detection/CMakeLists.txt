@@ -51,6 +51,8 @@ find_package(Boost REQUIRED
    COMPONENTS program_options filesystem system thread
 )
 
+pkg_search_module(SDL2 REQUIRED sdl2)
+
 # ----------------------------------------------------------------------
 # Setup CUDA
 if(USE_GPU)
@@ -99,6 +101,7 @@ include_directories(
   ${Boost_INCLUDE_DIRS} 
   ${local_INCLUDE_DIRS}
   "${doppia_root}/libs/cudatemplates/include"
+  ${SDL2_INCLUDE_DIRS}
 )
 
 if(USE_GPU)
@@ -258,7 +261,9 @@ target_link_libraries(objects_detection
 
    ${Boost_LIBRARIES}
    protobuf pthread
-   SDL X11 Xext #Xrandr
+   #SDL 
+   ${SDL2_LIBRARIES}
+   X11 Xext #Xrandr
    gomp
    ${libpng_LIBRARIES} jpeg
 #  ${OpenEXR_LIBRARIES}

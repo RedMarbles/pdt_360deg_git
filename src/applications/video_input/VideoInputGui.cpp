@@ -1,6 +1,7 @@
 #include "VideoInputGui.hpp"
 
-#include "SDL/SDL_keysym.h"
+//#include "SDL/SDL_keysym.h"
+#include "SDL2/SDL_keycode.h"
 
 #include "VideoInputApplication.hpp"
 #include "video_input/AbstractVideoInput.hpp"

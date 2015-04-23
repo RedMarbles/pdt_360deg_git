@@ -7,7 +7,7 @@
 #include "helpers/Log.hpp"
 #include "helpers/get_option_value.hpp"
 
-#include "SDL/SDL.h"
+#include "SDL2/SDL.h"
 
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
@@ -94,9 +94,19 @@ void BaseSdlGui::init_gui(const std::string &title, const int input_width, const
 
     // create the application window
     SDL_Init(SDL_INIT_VIDEO);
+
+    //SDL v2 code:
+    window_p = SDL_CreateWindow( (title + base_application.get_application_title()).c_str() ,
+                                SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_UNDEFINED,
+                                input_width*2, input_height,
+                                SDL_WINDOW_SHOWN);
+    screen_p = SDL_GetWindowSurface( window_p );
+    //renderer_p = SDL_CreateRenderer(window_p, -1, SDL_RENDERER_ACCELERATED);
+
     resize_gui(input_width, input_height);
 
-    SDL_WM_SetCaption(title.c_str(), base_application.get_application_title().c_str());
+    //SDL_WM_SetCaption(title.c_str(), base_application.get_application_title().c_str()); // SDL v1.2 code
 
     print_inputs_instructions();
 
@@ -109,14 +119,20 @@ void BaseSdlGui::init_gui(const std::string &title, const int input_width, const
 void BaseSdlGui::resize_gui(const int input_width, const int input_height)
 {
 
-    screen_p = SDL_SetVideoMode(input_width*2, input_height, 24, SDL_HWSURFACE);
-    if(screen_p == NULL)
+    //screen_p = SDL_SetVideoMode(input_width*2, input_height, 24, SDL_HWSURFACE); // SDL v1.2 code
+
+    if(window_p == NULL)
     {
-        fprintf(stderr, "Couldn't set %ix%i video mode: %s\n",
+        fprintf(stderr, "Couldn't create %ix%i window: %s\n",
                 input_width*2, input_height,
                 SDL_GetError());
-        throw std::runtime_error("Could not set SDL_SetVideoMode");
+        throw std::runtime_error("Could not initialize SDL_CreateWindow");
     }
+
+    //SDL2 code
+    SDL_SetWindowSize(window_p, input_width*2, input_height);
+    screen_p = SDL_GetWindowSurface( window_p );
+    //renderer_p = SDL_CreateRenderer(window_p, -1, SDL_RENDERER_ACCELERATED);
 
     screen_image.recreate(input_width*2, input_height);
     screen_image_view = boost::gil::view(screen_image);
@@ -129,7 +145,9 @@ void BaseSdlGui::resize_gui(const int input_width, const int input_height)
 
 BaseSdlGui::~BaseSdlGui()
 {
-    // nothing to do here
+    SDL_DestroyWindow( window_p );
+    SDL_Quit();
+
     return;
 }
 
@@ -139,14 +157,20 @@ bool BaseSdlGui::process_inputs()
 {
 
     bool end_of_game = false;
+    bool application_is_in_pause = should_stay_in_pause;
 
     SDL_Event event;
 
+    SDL_Keycode keys;
+
     while ( SDL_PollEvent(&event) )
     {
+        keys = 0;
+
         switch(event.type)
         {
-        case SDL_VIDEORESIZE:
+        //case SDL_VIDEORESIZE: // SDL v1.2 code
+        case SDL_WINDOWEVENT_RESIZED: //SDL v2 code
             // we do not want the user the play around with the window size
             throw std::runtime_error("BaseSdlGui::process_inputs does not support window resizing");
             break;
@@ -154,94 +178,106 @@ bool BaseSdlGui::process_inputs()
         case SDL_QUIT:
             end_of_game = true;
             break;
+
+        case SDL_KEYDOWN:
+            keys = event.key.keysym.sym;
+            break;
         }
-    }
+    //}
 
-    Uint8 *keys = SDL_GetKeyState(NULL);
+        //Uint8 *keys = SDL_GetKeyState(NULL); // SDL v1.2 code
+        //const Uint8 *keys = SDL_GetKeyboardState(NULL); // SDL v2 code
 
-    if(keys[SDLK_ESCAPE] or keys[SDLK_q])
-    {
-        end_of_game = true;
-    }
-
-
-    // check for a change in the view mode --
-    for(views_map_t::const_iterator views_it=views_map.begin();
-        views_it != views_map.end();
-        ++views_it)
-    {
-
-        const boost::uint8_t &view_key = views_it->first;
-
-        if(keys[view_key])
+        if((keys==SDLK_ESCAPE) or (keys==SDLK_q))
         {
-            const view_t &new_view = views_it->second;
-            const std::string &new_view_name = new_view.second;
+            end_of_game = true;
+        }
 
-            // boost::function operator== cannot be defined (?!)
-            // http://www.boost.org/doc/libs/1_44_0/doc/html/function/faq.html#id1284482
-            // to work around the issue we use the string description and pray that the strings are unique
 
-            //if(drawing_function != view_drawing_function)
-            if(current_view.second != new_view_name)
+        // check for a change in the view mode --
+        for(views_map_t::const_iterator views_it=views_map.begin();
+            views_it != views_map.end();
+            ++views_it)
+        {
+
+            const boost::uint8_t &view_key = views_it->first;
+
+            if(keys==view_key)
             {
-                printf("Switching to view %i: %s\n",
-                       (view_key - SDLK_0), new_view_name.c_str());
-                current_view = new_view;
+                const view_t &new_view = views_it->second;
+                const std::string &new_view_name = new_view.second;
+
+                // boost::function operator== cannot be defined (?!)
+                // http://www.boost.org/doc/libs/1_44_0/doc/html/function/faq.html#id1284482
+                // to work around the issue we use the string description and pray that the strings are unique
+
+                //if(drawing_function != view_drawing_function)
+                if(current_view.second != new_view_name)
+                {
+                    printf("Switching to view %i: %s\n",
+                           (view_key - SDLK_0), new_view_name.c_str());
+                    current_view = new_view;
+                }
+
             }
 
+        } // end of "for each view in views_map"
+
+
+        if( keys==SDLK_s )
+        {
+            save_screenshot();
         }
 
-    } // end of "for each view in views_map"
+        
+        should_stay_in_pause = false;
 
-
-    if( keys[SDLK_s])
-    {
-        save_screenshot();
-    }
-
-    bool application_is_in_pause = should_stay_in_pause;
-    should_stay_in_pause = false;
-
-    if( (keys[SDLK_p] or keys[SDLK_SPACE]) and (application_is_in_pause == false))
-    {
-        application_is_in_pause = true;
-        printf("Entering into a pause\n");
-    }
+        if( ((keys==SDLK_p) or (keys==SDLK_SPACE)) and (application_is_in_pause == false))
+        {
+            application_is_in_pause = true;
+            printf("Entering into a pause\n");
+        }
+    } //Closes while(SDL_PollEvent(&event))
 
     while(application_is_in_pause)
     {
 
         SDL_WaitEvent(&event);
 
+        SDL_Keycode keys = 0;
+
         switch(event.type)
         {
         case SDL_QUIT:
             end_of_game = true;
             break;
+
+        case SDL_KEYDOWN:
+            keys = event.key.keysym.sym;
+            break;
         }
 
-        Uint8 *keys = SDL_GetKeyState(NULL);
+        //const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
         if(event.type == SDL_QUIT or
-                keys[SDLK_p] or keys[SDLK_SPACE] or
-                keys[SDLK_q] or keys[SDLK_ESCAPE])
+                keys==SDLK_p or keys==SDLK_SPACE or
+                keys==SDLK_q or keys==SDLK_ESCAPE)
         {
             application_is_in_pause = false;
             printf("Exiting the pause\n");
         }
 
-        if(keys[SDLK_q] or keys[SDLK_ESCAPE])
+        if(keys==SDLK_q or keys==SDLK_ESCAPE)
         {
             end_of_game = true;
         }
 
-        if( keys[SDLK_s])
+        if( keys==SDLK_s )
         {
             save_screenshot();
         }
 
-        if( keys[SDLK_RIGHT] or keys[SDLK_DOWN] or  keys[SDLK_PAGEDOWN])
+        if( keys==SDLK_RIGHT or keys==SDLK_DOWN or  keys==SDLK_PAGEDOWN )
         {
             printf("Moving one frame forwards\n");
             // during next cycle will be in pause again
@@ -326,10 +362,10 @@ void BaseSdlGui::blit_to_screen()
     // on the endianness (byte order) of the machine
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     //const Uint32  r_mask = 0xff000000, g_mask = 0x00ff0000, b_mask = 0x0000ff00, a_mask = 0x000000ff;
-    const Uint32 r_mask = 0x00ff0000, g_mask = 0x0000ff00, b_mask = 0x000000ff, a_mask = 0x00000000;
+    const Uint32 r_mask = 0x00ff0000, g_mask = 0x0000ff00, b_mask = 0x000000ff, a_mask = 0xff000000;
 #else
     //const Uint32 r_mask = 0x000000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0xff000000;
-    const Uint32 r_mask = 0x0000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0x00000000;
+    const Uint32 r_mask = 0x0000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0xff000000;
 #endif
 
     SDL_Surface *surface_p =
@@ -355,7 +391,13 @@ void BaseSdlGui::blit_to_screen()
         SDL_UnlockSurface(screen_p);
     }
 
-    SDL_Flip(screen_p);
+    //SDL_Flip(screen_p);
+    SDL_UpdateWindowSurface( window_p );
+
+    //texture_p = SDL_CreateTextureFromSurface(renderer_p, surface_p);
+    //SDL_RenderClear(renderer_p);
+    //SDL_RenderCopy(renderer_p, texture_p, NULL, NULL);
+    //SDL_RenderPresent(renderer_p);
 
     SDL_FreeSurface(surface_p);
 

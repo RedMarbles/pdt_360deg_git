@@ -50,6 +50,8 @@ find_package(Boost REQUIRED
    COMPONENTS program_options filesystem system thread
 )
 
+pkg_search_module(SDL2 REQUIRED sdl2)
+
 # ----------------------------------------------------------------------
 # Setup link and include directories
 
@@ -82,6 +84,7 @@ include_directories(
   ${opencv_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
   ${local_INCLUDE_DIRS}
+  ${SDL2_INCLUDE_DIRS}
 )
 
 # ----------------------------------------------------------------------
@@ -163,7 +166,9 @@ target_link_libraries(stixel_world
 
    ${Boost_LIBRARIES} 
    protobuf pthread
-   SDL X11 Xext #Xrandr
+   #SDL
+   ${SDL2_LIBRARIES}
+   X11 Xext #Xrandr
    gomp
    ${libpng_LIBRARIES} jpeg
    ${opencv_LIBRARIES}

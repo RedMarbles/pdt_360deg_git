@@ -50,6 +50,8 @@ find_package(Boost REQUIRED
    program_options filesystem system thread
 )
 
+pkg_search_module(SDL2 REQUIRED sdl2)
+
 # ----------------------------------------------------------------------
 # Setup CUDA
 if(USE_GPU)
@@ -99,6 +101,7 @@ include_directories(
   ${libpng_INCLUDE_DIRS}
   ${opencv_INCLUDE_DIRS}
   ${local_INCLUDE_DIRS}
+  ${SDL2_INCLUDE_DIRS}
 )
 
 if(USE_GPU)
@@ -281,7 +284,8 @@ add_library(objects_detection SHARED
 target_link_libraries(objects_detection
    ${Boost_LIBRARIES}
    pthread gomp
-   protobuf SDL
+   protobuf #SDL
+   ${SDL2_LIBRARIES}
    ${opencv_LIBRARIES}
 #   SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
@@ -305,7 +309,8 @@ set_property(
 target_link_libraries(objects_detection_with_ui
    ${Boost_LIBRARIES}
    pthread gomp
-   protobuf SDL
+   protobuf #SDL
+   ${SDL2_LIBRARIES}
    ${opencv_LIBRARIES}
 #   SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
@@ -329,7 +334,8 @@ set_property(
 target_link_libraries(monocular_objects_detection
    ${Boost_LIBRARIES}
    pthread gomp
-   protobuf SDL
+   protobuf #SDL
+   ${SDL2_LIBRARIES}
    ${opencv_LIBRARIES}
 #   SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
@@ -354,7 +360,8 @@ set_property(
 target_link_libraries(monocular_objects_detection_with_ui
    ${Boost_LIBRARIES}
    pthread gomp
-   protobuf SDL
+   protobuf #SDL
+   ${SDL2_LIBRARIES}
    ${opencv_LIBRARIES}
 #   SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
@@ -376,7 +383,8 @@ target_link_libraries(test_objects_detection_lib objects_detection)
 
 target_link_libraries(test_objects_detection_lib
    ${Boost_LIBRARIES}
-   gomp SDL
+   gomp #SDL
+   ${SDL2_LIBRARIES}
    ${opencv_LIBRARIES}
 # SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
@@ -397,7 +405,8 @@ target_link_libraries(test_objects_detection_with_ui_lib objects_detection_with_
 
 target_link_libraries(test_objects_detection_with_ui_lib
    ${Boost_LIBRARIES}
-   gomp SDL
+   gomp #SDL
+   ${SDL2_LIBRARIES}
    ${opencv_LIBRARIES}
    SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
@@ -452,7 +461,9 @@ target_link_libraries(test_monocular_objects_detection_with_ui_lib
    ${Boost_LIBRARIES}
    gomp
    ${opencv_LIBRARIES}
-   SDL Xext Xrandr X11
+   #SDL
+   ${SDL2_LIBRARIES}
+   Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
 )
 

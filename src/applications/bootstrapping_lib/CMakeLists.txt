@@ -41,6 +41,8 @@ find_package(Boost REQUIRED
    program_options filesystem system thread
 )
 
+pkg_search_module(SDL2 REQUIRED sdl2)
+
 # ----------------------------------------------------------------------
 # Setup CUDA
 if(USE_GPU)
@@ -76,6 +78,7 @@ include_directories(
  "${doppia_root}/src/applications/bootstrapping_lib"
   ${opencv_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
+  ${SDL2_INCLUDE_DIRS}
 )
 
 if(USE_GPU)
@@ -193,6 +196,7 @@ target_link_libraries(bootstrapping
    pthread gomp
    protobuf
    ${opencv_LIBRARIES}
+   ${SDL2_LIBRARIES}
 #   SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
 )
@@ -211,6 +215,7 @@ target_link_libraries(test_bootstrapping_lib bootstrapping)
 target_link_libraries(test_bootstrapping_lib
    ${Boost_LIBRARIES}
    pthread gomp
+   ${SDL2_LIBRARIES}
 # SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
 )

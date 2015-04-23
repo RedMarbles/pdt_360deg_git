@@ -43,6 +43,8 @@ find_package(Boost REQUIRED
    program_options filesystem system thread
 )
 
+pkg_search_module(SDL2 REQUIRED sdl2)
+
 # ----------------------------------------------------------------------
 # Setup link and include directories
 
@@ -78,6 +80,7 @@ include_directories(
   ${libpng_INCLUDE_DIRS}
   ${opencv_INCLUDE_DIRS}
   ${Boost_INCLUDE_DIRS}
+  ${SDL2_INCLUDE_DIRS}
 )
 
 # ----------------------------------------------------------------------
@@ -163,6 +166,7 @@ target_link_libraries(stixel_world
    pthread gomp
    protobuf
    ${opencv_LIBRARIES}
+   ${SDL2_LIBRARIES}
 #   SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
 )
@@ -183,6 +187,7 @@ target_link_libraries(stixel_world_with_ui
    pthread gomp
    protobuf
    ${opencv_LIBRARIES}
+   ${SDL2_LIBRARIES}
 #   SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
 )
@@ -200,6 +205,7 @@ target_link_libraries(test_stixel_world_lib
    ${Boost_LIBRARIES}
    gomp pthread
    ${opencv_LIBRARIES}
+   ${SDL2_LIBRARIES}
 #  SDL Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
 )
@@ -217,7 +223,9 @@ target_link_libraries(test_stixel_world_with_ui_lib
    ${Boost_LIBRARIES}
    gomp pthread
    ${opencv_LIBRARIES}
-   SDL Xext Xrandr X11
+   ${SDL2_LIBRARIES}
+   #SDL 
+   Xext Xrandr X11
    ${libpng_LIBRARIES} jpeg
 )
 

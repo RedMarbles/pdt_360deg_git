@@ -18,7 +18,7 @@
 #include "drawing/gil/draw_stixel_world.hpp"
 #include "drawing/gil/draw_the_ground_corridor.hpp"
 
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include <boost/format.hpp>
 
@@ -68,7 +68,9 @@ StixelWorldLibGui::StixelWorldLibGui(const int input_width, const int input_heig
 
 StixelWorldLibGui::~StixelWorldLibGui()
 {
-    // nothing to do here
+    SDL_DestroyWindow( window_p );
+    SDL_Quit();
+
     return;
 }
 
@@ -92,9 +94,19 @@ void StixelWorldLibGui::init_gui(const std::string &title, const int input_width
 
     // create the application window
     SDL_Init(SDL_INIT_VIDEO);
+
+    //SDL v2 code:
+    window_p = SDL_CreateWindow( title.c_str() ,
+                                SDL_WINDOWPOS_UNDEFINED,
+                                SDL_WINDOWPOS_UNDEFINED,
+                                input_width*2, input_height,
+                                SDL_WINDOW_SHOWN);
+    screen_p = SDL_GetWindowSurface( window_p );
+    //renderer_p = SDL_CreateRenderer(window_p, -1, SDL_RENDERER_ACCELERATED);
+
     resize_gui(input_width, input_height);
 
-    SDL_WM_SetCaption(title.c_str(), title.c_str());
+    //SDL_WM_SetCaption(title.c_str(), title.c_str()); // SDL v1.2 code
 
     print_inputs_instructions();
 
@@ -107,14 +119,19 @@ void StixelWorldLibGui::init_gui(const std::string &title, const int input_width
 void StixelWorldLibGui::resize_gui(const int input_width, const int input_height)
 {
 
-    screen_p = SDL_SetVideoMode(input_width*2, input_height, 24, SDL_HWSURFACE);
-    if(screen_p == NULL)
+    //screen_p = SDL_SetVideoMode(input_width*2, input_height, 24, SDL_HWSURFACE); //SDL v1.2 code
+    //if(screen_p == NULL)
+    if(window_p == NULL)
     {
-        fprintf(stderr, "Couldn't set %ix%i video mode: %s\n",
+        fprintf(stderr, "Couldn't create %ix%i window: %s\n",
                 input_width*2, input_height,
                 SDL_GetError());
-        throw std::runtime_error("Could not set SDL_SetVideoMode");
+        throw std::runtime_error("Could not initialize SDL_CreateWindow");
     }
+
+    //SDL2 code
+    SDL_SetWindowSize(window_p, input_width*2, input_height);
+    screen_p = SDL_GetWindowSurface( window_p );
 
     screen_image.recreate(input_width*2, input_height);
     screen_image_view = boost::gil::view(screen_image);
@@ -131,11 +148,14 @@ bool StixelWorldLibGui::process_inputs()
 
     SDL_Event event;
 
+    SDL_Keycode keys = 0;
+
     while ( SDL_PollEvent(&event) )
     {
         switch(event.type)
         {
-        case SDL_VIDEORESIZE:
+        //case SDL_VIDEORESIZE: // SDL v1.2 code
+        case SDL_WINDOWEVENT_RESIZED: // SDL v2 code
             // we do not want the user the play around with the window size
             throw std::runtime_error("StixelWorldLibGui::process_inputs does not support window resizing");
             break;
@@ -143,45 +163,51 @@ bool StixelWorldLibGui::process_inputs()
         case SDL_QUIT:
             end_of_game = true;
             break;
+
+        case SDL_KEYDOWN:
+            keys = event.key.keysym.sym;
+            break;
         }
-    }
+    //}
 
-    Uint8 *keys = SDL_GetKeyState(NULL);
+        //Uint8 *keys = SDL_GetKeyState(NULL); // SDL v1.2 code
+        //const Uint8 *keys = SDL_GetKeyboardState(NULL);
 
-    if(keys[SDLK_ESCAPE] or keys[SDLK_q])
-    {
-        end_of_game = true;
-    }
-
-
-    // check for a change in the view mode --
-    for(views_map_t::const_iterator views_it=views_map.begin();
-        views_it != views_map.end();
-        ++views_it)
-    {
-
-        const boost::uint8_t &view_key = views_it->first;
-
-        if(keys[view_key])
+        if( (keys==SDLK_ESCAPE) or (keys==SDLK_q) )
         {
-            const view_t &new_view = views_it->second;
-            const std::string &new_view_name = new_view.second;
+            end_of_game = true;
+        }
 
-            // boost::function operator== cannot be defined (?!)
-            // http://www.boost.org/doc/libs/1_44_0/doc/html/function/faq.html#id1284482
-            // to work around the issue we use the string description and pray that the strings are unique
 
-            //if(drawing_function != view_drawing_function)
-            if(current_view.second != new_view_name)
+        // check for a change in the view mode --
+        for(views_map_t::const_iterator views_it=views_map.begin();
+            views_it != views_map.end();
+            ++views_it)
+        {
+
+            const boost::uint8_t &view_key = views_it->first;
+
+            if(keys==view_key)
             {
-                printf("Switching to view %i: %s\n",
-                       (view_key - SDLK_0), new_view_name.c_str());
-                current_view = new_view;
+                const view_t &new_view = views_it->second;
+                const std::string &new_view_name = new_view.second;
+
+                // boost::function operator== cannot be defined (?!)
+                // http://www.boost.org/doc/libs/1_44_0/doc/html/function/faq.html#id1284482
+                // to work around the issue we use the string description and pray that the strings are unique
+
+                //if(drawing_function != view_drawing_function)
+                if(current_view.second != new_view_name)
+                {
+                    printf("Switching to view %i: %s\n",
+                           (view_key - SDLK_0), new_view_name.c_str());
+                    current_view = new_view;
+                }
+
             }
 
-        }
-
-    } // end of "for each view in views_map"
+        } // end of "for each view in views_map"
+    } // end of while(SDL_PollEvent(&event))
 
 
     return end_of_game;
@@ -252,10 +278,10 @@ void StixelWorldLibGui::blit_to_screen()
     // on the endianness (byte order) of the machine
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
     //const Uint32  r_mask = 0xff000000, g_mask = 0x00ff0000, b_mask = 0x0000ff00, a_mask = 0x000000ff;
-    const Uint32 r_mask = 0x00ff0000, g_mask = 0x0000ff00, b_mask = 0x000000ff, a_mask = 0x00000000;
+    const Uint32 r_mask = 0x00ff0000, g_mask = 0x0000ff00, b_mask = 0x000000ff, a_mask = 0xff000000;
 #else
     //const Uint32 r_mask = 0x000000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0xff000000;
-    const Uint32 r_mask = 0x0000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0x00000000;
+    const Uint32 r_mask = 0x0000ff, g_mask = 0x0000ff00, b_mask = 0x00ff0000, a_mask = 0xff000000;
 #endif
 
     SDL_Surface *surface_p =
@@ -281,10 +307,16 @@ void StixelWorldLibGui::blit_to_screen()
         SDL_UnlockSurface(screen_p);
     }
 
-    SDL_Flip(screen_p);
+    //SDL_Flip(screen_p);
+    SDL_UpdateWindowSurface( window_p );
+
+    //texture_p = SDL_CreateTextureFromSurface(renderer_p, surface_p);
+    //SDL_RenderClear(renderer_p);
+    //SDL_RenderCopy(renderer_p, texture_p, NULL, NULL);
+    //SDL_RenderPresent(renderer_p);
 
     SDL_FreeSurface(surface_p);
-
+    
     return;
 }
 
