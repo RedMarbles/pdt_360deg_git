@@ -8,13 +8,18 @@
 
 // emmintrin will define __m128i
 // and include the SSE2 intrinsics
+#ifndef PDT_ARM_HEADERS
 #include <emmintrin.h>
+#else
+#include "SSE2NEON.h"
+#endif
 
 namespace doppia {
 
 
 typedef __m128i m128i;
 typedef __m64 m64;
+//typedef __m128i m64;
 
 typedef union {
     m128i m;

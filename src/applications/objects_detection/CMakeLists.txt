@@ -29,7 +29,7 @@ project (ObjectsDetection)
 # ----------------------------------------------------------------------
 # Site specific configurations
 include(${doppia_root}/common_settings.cmake)
-set(USE_GPU OFF CACHE BOOL "Should the GPU be used ?" )
+set(USE_GPU ON CACHE BOOL "Should the GPU be used ?" )
 
 # ----------------------------------------------------------------------
 # Setup required libraries
@@ -59,7 +59,7 @@ if(USE_GPU)
   find_package(CUDA 4.0 REQUIRED)
   include_directories(${CUDA_INCLUDE_DIRS} ${CUDA_CUT_INCLUDE_DIR}
     ${local_CUDA_CUT_INCLUDE_DIRS})
-  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch compute_20 -code sm_20)
+  set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS} -arch compute_53 -code sm_53)
 endif(USE_GPU)
 
 # ----------------------------------------------------------------------

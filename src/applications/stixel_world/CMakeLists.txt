@@ -28,7 +28,7 @@ project (StixelWorld)
 # ----------------------------------------------------------------------
 # Site specific configurations
 include(${doppia_root}/common_settings.cmake)
-set(USE_GPU OFF CACHE BOOL "Should the GPU be used ?" )
+set(USE_GPU ON CACHE BOOL "Should the GPU be used ?" )
 
 # ----------------------------------------------------------------------
 # Setup required libraries
@@ -154,7 +154,7 @@ file(GLOB HelpersCpp
 #set(CMAKE_CXX_FLAGS "-fprofile-generate ${CMAKE_CXX_FLAGS}")
 #set(CMAKE_CXX_FLAGS "-fprofile-use -fprofile-correction ${CMAKE_CXX_FLAGS}")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2") # enable sse2 even in debug mode
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -msse2") # enable sse2 even in debug mode
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Dint_p_NULL=\"((int*)0)\"")
 
 add_executable(stixel_world

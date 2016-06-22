@@ -69,6 +69,7 @@ set(local_INCLUDE_DIRS
   "/usr/include/eigen2/"
    "/usr/local/include/eigen2"
   "${doppia_root}/libs/cudatemplates/include"
+  "${doppia_root}/libs"
 )
 
 link_directories(

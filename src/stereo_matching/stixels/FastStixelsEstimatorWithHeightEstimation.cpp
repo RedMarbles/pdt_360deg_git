@@ -16,7 +16,12 @@
 #include <boost/gil/extension/io/png_io.hpp>
 
 // include SSE2 intrinsics
+//#include <emmintrin.h>
+#ifndef PDT_ARM_HEADERS
 #include <emmintrin.h>
+#else
+#include "SSE2NEON.h"
+#endif
 
 #include <omp.h>
 

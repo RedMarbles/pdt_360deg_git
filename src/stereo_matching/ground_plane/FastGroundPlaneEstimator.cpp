@@ -15,7 +15,12 @@
 #include "helpers/simd_intrisics_types.hpp"
 
 // include SSE2 intrinsics
+#ifndef PDT_ARM_HEADERS
 #include <emmintrin.h>
+#else
+#include "SSE2NEON.h"
+#endif
+
 
 #include <omp.h>
 

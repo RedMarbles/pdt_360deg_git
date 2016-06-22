@@ -17,7 +17,8 @@ site_name(HOSTNAME)
 # also using -march=native will imply -mtune=native
 # Thus the optimization flags below should work great on all machines
 # (O3 is already added by CMAKE_CXX_FLAGS_RELEASE)
-set(OPT_CXX_FLAGS "-fopenmp -ffast-math -funroll-loops -march=native")
+#set(OPT_CXX_FLAGS "-fopenmp -ffast-math -funroll-loops -march=native")
+set(OPT_CXX_FLAGS "-fopenmp -ffast-math -funroll-loops -march=armv8-a -mfloat-abi=hard -mfpu=neon -Wno-write-strings")
 #set(OPT_CXX_FLAGS "-fopenmp -ffast-math -funroll-loops -march=native -freciprocal-math -funsafe-math-optimizations -fassociative-math -ffinite-math-only -fcx-limited-range")  # cheap -Ofast copy
 #set(OPT_CXX_FLAGS "-ffast-math -funroll-loops -march=native") # disabled OpenMp, just for testing
 #set(OPT_CXX_FLAGS "-fopenmp -ffast-math -funroll-loops") # disable native compilation, so we can profile with older versions of valgrind/callgrind
@@ -339,18 +340,18 @@ elseif(HOSTED_AT_D2_NO_GPU GREATER -1)
   set(liblinear_INCLUDE_DIRS "/home/rodrigob/code/references/liblinear-1.8")
   set(liblinear_LIBRARY_DIRS "/home/rodrigob/code/references/liblinear-1.8")
 
-elseif(${HOSTNAME} STREQUAL  "Artework-Labs")
+elseif(${HOSTNAME} STREQUAL  "tegra-ubuntu")
   # change Artework-Labs to what /bin/hostname returns
 
   message(STATUS "Using Artework-Labs compilation options")
   # start with an empty section, and see what fails as you go through the readme.text instructions
 
   #Disable the hundreds of warnings caused by unused typedefs in the code
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs ")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-local-typedefs -Wno-strict-aliasing")
 
   #The _simd instructions cannot compile unless SSE, SSE2 and the other SSEX packages are allowed
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=native -Wno-unknown-pragmas ")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-sign-compare  -Wno-write-strings")
+  #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -march=native -Wno-unknown-pragmas ")
+  #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wno-sign-compare  -Wno-write-strings")
 
   #Unsure about this. Enable this if you want to allow the program to go into multi-threaded mode, which might make debugging more difficult
   #set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fopenmp")
@@ -364,13 +365,16 @@ elseif(${HOSTNAME} STREQUAL  "Artework-Labs")
   #option(USE_GPU "Should the GPU be used ?" OFF) # set to false for testing purposes only
   ##set(CUDA_BUILD_EMULATION OFF CACHE BOOL "enable emulation mode")
   ##set(CUDA_BUILD_CUBIN OFF)
-  set(local_CUDA_CUT_INCLUDE_DIRS "/usr/local/cuda-5.5/include")
-  set(local_CUDA_CUT_LIBRARY_DIRS "/usr/local/cuda-5.5/lib")
-  set(local_CUDA_LIB_DIR "/usr/lib/nvidia")
+  set(local_CUDA_CUT_INCLUDE_DIRS "/usr/local/cuda-7.0/include")
+  set(local_CUDA_CUT_LIBRARY_DIRS "/usr/local/cuda-7.0/lib")
+  set(local_CUDA_LIB_DIR "/usr/lib/arm-linux-gnueabihf")
   ##set(local_CUDA_LIB_DIR "/usr/lib/nvidia-331 " ${local_CUDA_LIB_DIR})
-  set(local_CUDA_LIB "/usr/lib/nvidia/libcuda.so")
+  set(local_CUDA_LIB "/usr/lib/arm-linux-gnueabihf/libcuda.so")
   #set(cuda_LIBS "cuda")
   #set(cutil_LIB "cutil")
+  
+  #Preprocessor directive to use ARM processor files
+  add_definitions(-DPDT_ARM_HEADERS)
 
 else ()
   message(FATAL_ERROR, "Unknown machine, please add your configuration inside doppia/common_settings.cmake")
