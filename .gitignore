@@ -137,3 +137,8 @@ src/applications/objects_detection_lib/test_monocular_objects_detection_lib
 src/applications/objects_detection_lib/test_monocular_objects_detection_with_ui_lib
 src/applications/objects_detection_lib/test_objects_detection_lib
 src/applications/objects_detection_lib/test_objects_detection_with_ui_lib
+
+*.pb.cc
+*.pb.h
+*_pb2.py
+
